@@ -28,7 +28,7 @@ public class CustomerManager {
 	
 	public void register(String identityNumber, String password, double money) {
 		int count = 0;
-		// Password doðum tarihi mi kontrol edelim 
+		// Password doğum tarihi mi kontrol edelim 
 		for (int i = 0; i<= password.length() - 1; i++) {
 			
 			if (Character.isDigit(password.charAt(i))) {
@@ -38,10 +38,10 @@ public class CustomerManager {
 			
 		}
 		if (count >= 4) 
-			System.out.println("Þifre doðum tarihi olamaz");
+			System.out.println("Şifre doğum tarihi olamaz");
 		
 		else {
-			// json dosyasýna ekle kullanýcýyý
+			// json dosyasına ekle kullanıcıyı
 			Customer customer = new Customer(
 						identityNumber,
 						password,
@@ -60,25 +60,25 @@ public class CustomerManager {
 	@SuppressWarnings("unchecked")
 	public boolean login(String identityNumber, String password) {
 		
-		// Eðer kullanýcýnýn verileri json da varsa git onlarý doðrula 
+		// Eğer kullanıcının verileri json da varsa git onları doğrula 
 		// Read json
 		boolean isLoginSuccess = true;
 		
 		JSONArray customerList = readJson();
 		
 		if (customerList.size() == 0) {
-			System.out.println("Veritabaný boþ!");
+			System.out.println("Veritabanı yok!");
 			isLoginSuccess = false;
 		} else {
 			customerList.stream().forEach(customer -> {
 				JSONObject c = (JSONObject) customer;
 				if ( c.get("identityNumber").equals(identityNumber) && c.get("password").equals(password)) {
 					
-					System.out.println("Giriþ baþarýlý! Hoþgeldiniz.");
+					System.out.println("Giriş başarılı! Hoşgeldiniz.");
 					
 				}
 				else
-					System.out.println("Þifre veya Kimlik numarasý hatalý");
+					System.out.println("Şifre veya Kimlik numarası hatalı");
 					
 			});
 			
@@ -88,20 +88,20 @@ public class CustomerManager {
 	
 	@SuppressWarnings("unchecked")
 	public void moneyTransfer(String fromAccount, String toAccount, double money) {
-		JSONArray customerDb = readJson(); // Json dosyasýný oku
+		JSONArray customerDb = readJson(); // Json dosyasını oku
 		
 		if (customerDb.size() == 0) {
-			System.out.println("Veritabaný boþ!");
+			System.out.println("Veritabanı yok!");
 		} else {
 			customerDb.stream().forEach(customer -> {
 				JSONObject c = (JSONObject) customer;
 				
 				if (c.get("identityNumber").equals(fromAccount)) { // Verile identity number var ise devam et
 					
-					System.out.println("Ýþlem öncesi bakiye : " + c.get("money"));
-					System.out.println("Ýþlem sonrasý bakiye : " + ((double) c.get("money") - money));
+					System.out.println("İşlem öncesi bakiye : " + c.get("money"));
+					System.out.println("İşlem sonrasý bakiye : " + ((double) c.get("money") - money));
 					
-					Customer newCustomer = new Customer( // Kullanýcýnýn parasýný azaltýyoruz transferden dolayý
+					Customer newCustomer = new Customer( // Kullanıcının parasını azaltıyoruz transferden dolayı
 								(String) c.get("identityNumber"),
 								(String) c.get("password"),
 								(double) ((double) c.get("money") - money),
@@ -109,9 +109,9 @@ public class CustomerManager {
 								(double) c.get("creditDebt")
 							);
 					
-					customerList.remove(customer); // Json dosyasýný güncellemek için kullanýcýyý siliyorum!
+					customerList.remove(customer); // Json dosyasını güncellemek için kullanıcıyı siliyorum!
 					
-					writeJson(newCustomer); // Parasýný güncel fiyat olarak oluþturduðum kullanýcýyý json a yazýyorum!
+					writeJson(newCustomer); // Parasını güncel fiyat olarak oluşturduğum kullanıcıyı json a yazıyorum!
 					
 				}
 				
@@ -129,10 +129,10 @@ public class CustomerManager {
 		// Borç yoksa borç yok yaz
 		// Borç var ise hesapta yeterli para varsa ödeyebilsin!
 		
-		JSONArray customerDb = readJson(); // Json dosyasýný oku
+		JSONArray customerDb = readJson(); // Json dosyasını oku
 		
 		if (customerDb.size() == 0) {
-			System.out.println("Veritabaný boþ!");
+			System.out.println("Veritabanı yok!");
 		} else {
 			customerDb.stream().forEach(customer -> {
 				JSONObject c = (JSONObject) customer;
@@ -140,7 +140,7 @@ public class CustomerManager {
 				if (c.get("identityNumber").equals(identityNumber)) { // Verilen identity number var ise devam et
 					
 					if ((double) c.get("cardDebt") == 0) {
-						System.out.println("Kard borcunuz bulunmamaktadýr.");
+						System.out.println("Kart borcunuz bulunmamaktadır.");
 					} else {
 						if ( (double) c.get("money") >= (double) c.get("cardDebt")) {
 							// Ödeme iþlemini yap
@@ -148,7 +148,7 @@ public class CustomerManager {
 							System.out.println("Eski bakiye : " + c.get("money"));
 							System.out.println("Yeni bakiye : " + ( (double) c.get("money") - (double) c.get("cardDebt")));
 							
-							// Kullanýcýyý güncelleyelim !
+							// Kullanıcıyı güncelleyelim !
 							Customer newCustomer = new Customer( 
 									(String) c.get("identityNumber"),
 									(String) c.get("password"),
@@ -157,11 +157,11 @@ public class CustomerManager {
 									(double) c.get("creditDebt")
 									);
 							
-							customerList.remove(customer); // Json dosyasýný güncellemek için kullanýcýyý siliyorum!
-							writeJson(newCustomer); // Kart borcunu sildiðim kullanýcýyý json a yazýyorum!
+							customerList.remove(customer); // Json dosyasını güncellemek için kullanıcıyı siliyorum!
+							writeJson(newCustomer); // Kart borcunu sildiğim kullanıcıyı json a yazıyorum!
 
 						} else {
-							System.out.println("Borcunuzu ödemek için yeterli paranýz bulunmamaktadýr.");
+							System.out.println("Borcunuzu ödemek için yeterli paranız bulunmamaktadır.");
 						}
 					}
 					
@@ -176,10 +176,10 @@ public class CustomerManager {
 	
 	@SuppressWarnings("unchecked")
 	public void payDebt(String identityNumber) {
-		JSONArray customerDb = readJson(); // Json dosyasýný oku
+		JSONArray customerDb = readJson(); // Json dosyasını oku
 		
 		if (customerDb.size() == 0) {
-			System.out.println("Veritabaný boþ!");
+			System.out.println("Veritabanı yok!");
 		} else {
 			customerDb.stream().forEach(customer -> {
 				JSONObject c = (JSONObject) customer;
@@ -187,15 +187,15 @@ public class CustomerManager {
 				if (c.get("identityNumber").equals(identityNumber)) {
 					
 					if ((double) c.get("creditDebt") == 0) {
-						System.out.println("Kredi borcunuz bulunmamaktadýr.");
+						System.out.println("Kredi borcunuz bulunmamaktadır.");
 					} else {
 						if ( (double) c.get("money") >= (double) c.get("creditDebt")) {
-							// Ödeme iþlemini yap
+							// Ödeme işlemini yap
 							System.out.println("Borcunuz ödendi!");
 							System.out.println("Eski bakiye : " + c.get("money"));
 							System.out.println("Yeni bakiye : " + ( (double) c.get("money") - (double) c.get("creditDebt")));
 							
-							// Kullanýcýyý güncelleyelim !
+							// Kullanıcıyı güncelleyelim !
 							Customer newCustomer = new Customer( 
 									(String) c.get("identityNumber"),
 									(String) c.get("password"),
@@ -204,11 +204,11 @@ public class CustomerManager {
 									(double) 0
 									);
 							
-							customerList.remove(customer); // Json dosyasýný güncellemek için kullanýcýyý siliyorum!
-							writeJson(newCustomer); // Kart borcunu sildiðim kullanýcýyý json a yazýyorum!
+							customerList.remove(customer); // Json dosyasını güncellemek için kullanıcıyı siliyorum!
+							writeJson(newCustomer); // Kart borcunu sildğim kullanıcıyı json a yazıyorum!
 
 						} else {
-							System.out.println("Borcunuzu ödemek için yeterli paranýz bulunmamaktadýr.");
+							System.out.println("Borcunuzu ödemek için yeterli paranız bulunmamaktadır.");
 						}
 					}
 					
